@@ -44,10 +44,10 @@ public class StudentServiceImpl implements StudentService {
     //Retrive Student
     @Override
     public StudentOutputDto getStudent(StudentLoginDto loginDto) {
-        Student student = repo.findByRollNo(loginDto.getRollNo()).orElse(null);
-        if(ObjectUtils.isEmpty(student)){
-            throw new ResourceNotFoundException("Student","RollNo",loginDto.getRollNo().toString());
-        }
+        Student student = repo
+        .findByRollNo(loginDto.getRollNo())
+        .orElseThrow(()-> new ResourceNotFoundException("Student","RollNo",loginDto.getRollNo().toString()));
+        
         
         if(student.getRollNo().equals(loginDto.getRollNo()) && student.getPassword().equals(loginDto.getPassword())){
             return mapper.toOutputDto(student);
@@ -58,10 +58,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void updateStudent(StudentUpdateDto updateDto) {
-        Student student = repo.findByRollNo(updateDto.getRollNo()).orElse(null);
-        if(ObjectUtils.isEmpty(student)){
-            throw new ResourceNotFoundException("Student","RollNo",updateDto.getRollNo().toString());
-        }
+        Student student = repo
+        .findByRollNo(updateDto.getRollNo())
+        .orElseThrow(()-> new ResourceNotFoundException("Student","RollNo",updateDto.getRollNo().toString()));
+
         if(updateDto.getRollNo().equals(student.getRollNo()) && updateDto.getPassword().equals(student.getPassword())){
             student.setName(updateDto.getName());
             student.setEmail(updateDto.getEmail());
@@ -76,10 +76,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void deleteStudent(StudentLoginDto loginDto) {
-        Student student = repo.findByRollNo(loginDto.getRollNo()).orElse(null);
-        if(ObjectUtils.isEmpty(student)){
-            throw new ResourceNotFoundException("Student","RollNo",loginDto.getRollNo().toString());
-        }
+        Student student = repo.findByRollNo(loginDto.getRollNo()).orElseThrow(()-> new ResourceNotFoundException("Student","RollNo",loginDto.getRollNo().toString()));
+
         if(student.getRollNo().equals(loginDto.getRollNo()) && student.getPassword().equals(loginDto.getPassword())){
             repo.deleteById(student.getId());
         }else{
